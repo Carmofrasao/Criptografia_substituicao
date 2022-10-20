@@ -23,10 +23,13 @@ int main(){
     i--;
     int z = i;
     char aux;
+
     for (int l = 0; l < i/2; l++){
-        aux = texto[l];
-        texto[l] = texto[z];
-        texto[z] = aux;
+        if((texto[l] < 128 && texto[l] >= 0) && (texto[z] < 128 && texto[z] >= 0)){
+            aux = texto[l];
+            texto[l] = texto[z];
+            texto[z] = aux;
+        }
         z--; 
     }
     

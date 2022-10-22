@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
+#include <locale.h>
 
 char * substitue(char letra){
     switch (letra)
@@ -199,6 +200,8 @@ char * substitue(char letra){
 }
 
 int main(){
+    setlocale(LC_ALL, "Portuguese_Brasil");
+
     struct stat sb;
     if (stat("texto.txt", &sb) == -1) {
         perror("stat");
@@ -230,6 +233,7 @@ int main(){
     
     int i = 0;
     unsigned char c;
+    // Lendo o arquivo com o texto claro
     c = fgetc(texto_claro);
     while (!feof(texto_claro)){
         texto[i] = c;
@@ -243,6 +247,7 @@ int main(){
     int k = 0;
     unsigned char aux;
 
+    // Criptografando
     for (int l = 0; l < i/2+1; l++){
         if((texto[l] < 128 && texto[l] >= 0) && (texto[z] < 128 && texto[z] >= 0)){
             aux = texto[l];

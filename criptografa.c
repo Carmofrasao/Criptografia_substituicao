@@ -203,12 +203,12 @@ int main(){
     setlocale(LC_ALL, "Portuguese_Brasil");
 
     struct stat sb;
-    if (stat("texto.txt", &sb) == -1) {
+    if (stat("texto_claro.txt", &sb) == -1) {
         perror("stat");
         exit(EXIT_FAILURE);
     }
 
-    FILE * texto_claro = fopen("texto.txt", "r");
+    FILE * texto_claro = fopen("texto_claro.txt", "r");
     if(!texto_claro){
         perror("Erro na abertura de arquivo");
         exit(-1);
@@ -254,22 +254,20 @@ int main(){
             unsigned char * aux2 = substitue(texto[z]);
             for (int z = 0; z < 6; z++)
                 result[k+z] = aux2[z];
-            k+=6;
-
+        
             aux2 = substitue(aux);
             for (int z = 0; z < 6; z++)
                 result[u-5+z] = aux2[z];
-            u-=6;
         }
         else{
             for (int z = 0; z < 6; z++)
                 result[k+z] = texto[l];
-            k+=6;
 
             for(int m = 0; m < 6; m++)
                 result[u-5+m] = texto[z];
-            u-=6;
-        }      
+        }   
+        k+=6;   
+        u-=6;
         z--; 
     }
     

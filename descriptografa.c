@@ -240,8 +240,6 @@ int main(){
     };
     i--;
 
-    printf("%s\n", texto);
-
     int z = i;
     int u = i/6;
     int k = 0;
@@ -257,8 +255,6 @@ int main(){
 
         unsigned char aux2 = substitue(aux);
         unsigned char aux3 = substitue(aux1);
-
-        printf("%s %s\n", aux, aux1);
 
         if(aux2 != '\0' && aux3 != '\0'){
             result[u] = aux2;

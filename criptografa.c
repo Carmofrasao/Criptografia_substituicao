@@ -200,54 +200,73 @@ char * substitue(char letra){
 
 int main(){
     struct stat sb;
-
     if (stat("texto.txt", &sb) == -1) {
         perror("stat");
         exit(EXIT_FAILURE);
     }
-    FILE *text;
-    text = fopen("texto.txt", "r");
+
+    FILE * texto_claro = fopen("texto.txt", "r");
+    if(!texto_claro){
+        perror("Erro na abertura de arquivo");
+        exit(-1);
+    }
+
+    FILE * texto_cifrado = fopen("texto_cifrado.txt", "w");
+    if(!texto_cifrado){
+        perror("Erro na abertura de arquivo");
+        exit(-1);
+    }
+
     unsigned char * texto = calloc(1, sb.st_size);
+    if(!texto){
+        perror("Erro na alocação de memoria");
+        exit(-1);
+    }
     unsigned char * result = calloc(6, sb.st_size);
+    if (!result){
+        perror("Erro na alocação de memoria");
+        exit(-1);
+    }
+    
     int i = 0;
     unsigned char c;
-    c = fgetc(text);
-    while (!feof(text)){
+    c = fgetc(texto_claro);
+    while (!feof(texto_claro)){
         texto[i] = c;
-        c = fgetc(text);
+        c = fgetc(texto_claro);
         i++;
     };
     i--;
+
     int z = i;
     int u = 6 * i;
     int k = 0;
     unsigned char aux;
-    printf("%s\n", texto);
 
-    for (int l = 0; l < i/2; l++){
+    for (int l = 0; l < i/2+1; l++){
         if((texto[l] < 128 && texto[l] >= 0) && (texto[z] < 128 && texto[z] >= 0)){
             aux = texto[l];
             unsigned char * aux2 = substitue(texto[z]);
             for (int z = 0; z < 6; z++)
                 result[k+z] = aux2[z];
             k+=6;
+
             aux2 = substitue(aux);
             for (int z = 0; z < 6; z++)
                 result[u-5+z] = aux2[z];
-            
             u-=6;
         }
         else{
             for (int z = 0; z < 6; z++)
                 result[k+z] = texto[l];
             k+=6;
-            for(int z = 0; z < 6; z++)
-                result[u-5+z] = texto[z];
+
+            for(int m = 0; m < 6; m++)
+                result[u-5+m] = texto[z];
             u-=6;
         }      
         z--; 
     }
     
-
-    printf("%s\n", result);
+    fprintf(texto_cifrado, "%s\n", result);
 }

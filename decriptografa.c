@@ -249,13 +249,7 @@ int main(int argc, char * argv[]){
     i--;
 
     int z = i;
-    int u = i/6;
-    int k = 0;
-    char * aux = calloc(6, sizeof(char));
-    if(!aux){
-        perror("Erro na alocação de memoria");
-        exit(-1);
-    }
+    int m = 0;
 
     char * aux1 = calloc(6, sizeof(char));
     if(!aux1){
@@ -264,36 +258,25 @@ int main(int argc, char * argv[]){
     }
 
     // Descriptografando
-    for (int l = 0; l < i/2+1; l+=6){
-        for(int u = 0; u < 6; u++)
-            aux[u] = texto[l+u];
+    for (int l = i/6; l >= 0; l--){
         for(int u = 0; u < 6; u++)
             aux1[u] = texto[z-6+u];
 
-        char aux2 = substitue(aux);
         char aux3 = substitue(aux1);
 
-        if(aux2 != '\0' && aux3 != '\0'){
-            result[u] = aux2;
-            result[k] = aux3;
-        }
-        else{
-            result[k] = texto[l];
-            result[u] = texto[z];
-        }  
-
-        k++;
-        u--;    
-        z-=6; 
+        if(aux3 != '\0')
+            fprintf(texto_decifrado, "%c", aux3);
+        else
+            fprintf(texto_decifrado, "%c", texto[m]);
+        
+        m += 6;
+        z -= 6; 
     }
     
-    fprintf(texto_decifrado, "%s\n", result);
-
     fclose(texto_cifrado);
     fclose(texto_decifrado);
     free(texto);
     free(result);
-    // free(aux);
     free(aux1);
 
     return 0;

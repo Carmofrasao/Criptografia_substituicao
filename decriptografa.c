@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <locale.h>
 
 char substitue(char * palavra){
     if(strcmp(palavra, "exceto") == 0)
@@ -197,6 +198,7 @@ char substitue(char * palavra){
 }
 
 int main(int argc, char * argv[]){
+    setlocale(LC_ALL, "Portuguese_Brasil");
     
     if(argc < 2){
         printf("Para descriptografar seu texto:\n./descriptografa -e <nome do arquivo> -s <arquivo de saida>\n");

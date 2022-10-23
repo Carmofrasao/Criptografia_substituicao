@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
-#include <locale.h>
 
 char substitue(char * palavra){
     if(strcmp(palavra, "exceto") == 0)
@@ -197,40 +196,47 @@ char substitue(char * palavra){
         return '\0';
 }
 
-int main(){
-    setlocale(LC_ALL, "Portuguese_Brasil");
+int main(int argc, char * argv[]){
+    
+    if(argc < 2){
+        printf("Para descriptografar seu texto:\n./descriptografa -e <nome do arquivo> -s <arquivo de saida>\n");
+        return 0;
+    }
+
+    char * entrada = argv[2];
+    char * saida = argv[4];
 
     struct stat sb;
-    if (stat("texto_cifrado.txt", &sb) == -1) {
+    if (stat(entrada, &sb) == -1) {
         perror("stat");
         exit(EXIT_FAILURE);
     }
 
-    FILE * texto_cifrado = fopen("texto_cifrado.txt", "r");
+    FILE * texto_cifrado = fopen(entrada, "r");
     if(!texto_cifrado){
         perror("Erro na abertura de arquivo");
         exit(-1);
     }
 
-    FILE * texto_decifrado = fopen("texto_decifrado.txt", "w");
+    FILE * texto_decifrado = fopen(saida, "w");
     if(!texto_decifrado){
         perror("Erro na abertura de arquivo");
         exit(-1);
     }
 
-    unsigned char * texto = calloc(1, sb.st_size);
+    char * texto = calloc(1, sb.st_size);
     if(!texto){
         perror("Erro na alocação de memoria");
         exit(-1);
     }
-    unsigned char * result = calloc(1/6, sb.st_size);
+    char * result = calloc(1/6, sb.st_size);
     if (!result){
         perror("Erro na alocação de memoria");
         exit(-1);
     }
     
     int i = 0;
-    unsigned char c;
+    char c;
     // Lendo o arquivo com o texto cifrado
     c = fgetc(texto_cifrado);
     while (!feof(texto_cifrado)){
@@ -243,8 +249,17 @@ int main(){
     int z = i;
     int u = i/6;
     int k = 0;
-    unsigned char * aux = calloc(6, sizeof(char));
-    unsigned char * aux1 = calloc(6, sizeof(char));
+    char * aux = calloc(6, sizeof(char));
+    if(!aux){
+        perror("Erro na alocação de memoria");
+        exit(-1);
+    }
+
+    char * aux1 = calloc(6, sizeof(char));
+    if(!aux1){
+        perror("Erro na alocação de memoria");
+        exit(-1);
+    }
 
     // Descriptografando
     for (int l = 0; l < i/2+1; l+=6){
@@ -253,8 +268,8 @@ int main(){
         for(int u = 0; u < 6; u++)
             aux1[u] = texto[z-6+u];
 
-        unsigned char aux2 = substitue(aux);
-        unsigned char aux3 = substitue(aux1);
+        char aux2 = substitue(aux);
+        char aux3 = substitue(aux1);
 
         if(aux2 != '\0' && aux3 != '\0'){
             result[u] = aux2;
@@ -271,4 +286,13 @@ int main(){
     }
     
     fprintf(texto_decifrado, "%s\n", result);
+
+    fclose(texto_cifrado);
+    fclose(texto_decifrado);
+    free(texto);
+    free(result);
+    // free(aux);
+    free(aux1);
+
+    return 0;
 }

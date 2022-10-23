@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
-#include <locale.h>
 
 char * substitue(char letra){
     switch (letra)
@@ -197,42 +196,50 @@ char * substitue(char letra){
     default:
         break;
     }
+    return '\0';
 }
 
-int main(){
-    setlocale(LC_ALL, "Portuguese_Brasil");
+int main(int argc, char * argv[]){
+
+    if(argc < 2){
+        printf("Para criptografar seu texto:\n./criptografa -e <nome do arquivo> -s <arquivo de saida>\n");
+        return 0;
+    }
+
+    char * entrada = argv[2];
+    char * saida = argv[4];
 
     struct stat sb;
-    if (stat("texto_claro.txt", &sb) == -1) {
+    if (stat(entrada, &sb) == -1) {
         perror("stat");
         exit(EXIT_FAILURE);
     }
 
-    FILE * texto_claro = fopen("texto_claro.txt", "r");
+    FILE * texto_claro = fopen(entrada, "r");
     if(!texto_claro){
         perror("Erro na abertura de arquivo");
         exit(-1);
     }
 
-    FILE * texto_cifrado = fopen("texto_cifrado.txt", "w");
+    FILE * texto_cifrado = fopen(saida, "w");
     if(!texto_cifrado){
         perror("Erro na abertura de arquivo");
         exit(-1);
     }
 
-    unsigned char * texto = calloc(1, sb.st_size);
+    char * texto = calloc(1, sb.st_size);
     if(!texto){
         perror("Erro na alocação de memoria");
         exit(-1);
     }
-    unsigned char * result = calloc(6, sb.st_size);
+    char * result = calloc(6, sb.st_size);
     if (!result){
         perror("Erro na alocação de memoria");
         exit(-1);
     }
     
     int i = 0;
-    unsigned char c;
+    char c;
     // Lendo o arquivo com o texto claro
     c = fgetc(texto_claro);
     while (!feof(texto_claro)){
@@ -245,26 +252,26 @@ int main(){
     int z = i;
     int u = 6 * i;
     int k = 0;
-    unsigned char aux;
+    char aux;
 
     // Criptografando
     for (int l = 0; l < i/2+1; l++){
         if((texto[l] < 128 && texto[l] >= 0) && (texto[z] < 128 && texto[z] >= 0)){
             aux = texto[l];
-            unsigned char * aux2 = substitue(texto[z]);
+            char * aux2 = substitue(texto[z]);
             for (int z = 0; z < 6; z++)
                 result[k+z] = aux2[z];
         
             aux2 = substitue(aux);
             for (int z = 0; z < 6; z++)
-                result[u-5+z] = aux2[z];
+                result[u+z] = aux2[z];
         }
         else{
             for (int z = 0; z < 6; z++)
                 result[k+z] = texto[l];
 
             for(int m = 0; m < 6; m++)
-                result[u-5+m] = texto[z];
+                result[u+m] = texto[z];
         }   
         k+=6;   
         u-=6;
@@ -272,4 +279,11 @@ int main(){
     }
     
     fprintf(texto_cifrado, "%s\n", result);
+
+    fclose(texto_claro);
+    fclose(texto_cifrado);
+    free(texto);
+    free(result);
+
+    return 0;
 }

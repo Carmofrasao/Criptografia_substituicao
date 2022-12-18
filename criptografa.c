@@ -202,7 +202,7 @@ char * substitue(char letra){
 int main(int argc, char * argv[]){
 
     if(argc < 2){
-        printf("Para criptografar seu texto:\n./criptografa -e <nome do arquivo> -s <arquivo de saida>\n");
+        printf("Para criptografar seu texto:\n./criptografa -e <arquivo de entrada> -s <arquivo de saida>\n");
         return 0;
     }
 

@@ -201,7 +201,7 @@ int main(int argc, char * argv[]){
     setlocale(LC_ALL, "Portuguese_Brasil");
     
     if(argc < 2){
-        printf("Para descriptografar seu texto:\n./descriptografa -e <nome do arquivo> -s <arquivo de saida>\n");
+        printf("Para decriptografar seu texto:\n./decriptografa -e <arquivo de entrada> -s <arquivo de saida>\n");
         return 0;
     }
 

@@ -111,6 +111,8 @@ char substitue(char * palavra){
         return 'Z';
     else if(strcmp(palavra, "ensejo") == 0)
         return ' ';
+    else if(strcmp(palavra, "eficas") == 0)
+        return '0';
     else if(strcmp(palavra, "eficaz") == 0)
         return '1';
     else if(strcmp(palavra, "ocioso") == 0)
@@ -248,7 +250,6 @@ int main(int argc, char * argv[]){
     };
     i--;
 
-    int z = i;
     int m = 0;
 
     char * aux1 = calloc(6, sizeof(char));
@@ -260,7 +261,7 @@ int main(int argc, char * argv[]){
     // Descriptografando
     for (int l = i/6; l >= 0; l--){
         for(int u = 0; u < 6; u++)
-            aux1[u] = texto[z-6+u];
+            aux1[u] = texto[m+u];
 
         char aux3 = substitue(aux1);
 
@@ -270,7 +271,6 @@ int main(int argc, char * argv[]){
             fprintf(texto_decifrado, "%c", texto[m]);
         
         m += 6;
-        z -= 6; 
     }
     
     fclose(texto_cifrado);

@@ -111,6 +111,8 @@ char * substitue(char letra){
         return "gloria";
     case ' ':
         return "ensejo";
+    case '0':
+        return "eficas";
     case '1':
         return "eficaz";
     case '2':
@@ -249,33 +251,22 @@ int main(int argc, char * argv[]){
     };
     i--;
 
-    int z = i;
-    int u = 6 * i;
     int k = 0;
-    char aux;
 
     // Criptografando
-    for (int l = 0; l < i/2+1; l++){
-        if((texto[l] < 128 && texto[l] >= 0) && (texto[z] < 128 && texto[z] >= 0)){
-            aux = texto[l];
-            char * aux2 = substitue(texto[z]);
-            for (int z = 0; z < 6; z++)
+    for (int l = 0; l < i; l++){
+        if(texto[l] < 126 && texto[l] >= 32){
+            char * aux2 = substitue(texto[l]);
+            for (int z = 0; z < 6; z++){
                 result[k+z] = aux2[z];
-        
-            aux2 = substitue(aux);
-            for (int z = 0; z < 6; z++)
-                result[u+z] = aux2[z];
+            }
         }
         else{
-            for (int z = 0; z < 6; z++)
+            for (int z = 0; z < 6; z++){
                 result[k+z] = texto[l];
-
-            for(int m = 0; m < 6; m++)
-                result[u+m] = texto[z];
+            }
         }   
         k+=6;   
-        u-=6;
-        z--; 
     }
     
     fprintf(texto_cifrado, "%s\n", result);
